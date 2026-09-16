@@ -1,0 +1,1 @@
+# Goal: keep mouse centered while moving forward
