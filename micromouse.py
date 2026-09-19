@@ -148,6 +148,38 @@ class Micromouse():
         elif index < 1:
             return (sensor_1, sensor_2, sensor_3)
 
+    def get_tof_values(self, index=0):
+        """
+        Gets the current values of the time of flight distnace sensors.
+        1 = front
+        2 = left
+        3 = right
+        
+        Parameters:
+            index (int): The number of the TOF sensor to read. 1 for TOF1
+            and 3 for TOF3
+
+        Returns:
+            Union[(float, float, float), float]:
+                The TOF sensor readings in the order 1, 2, 3 if no
+                index is provided, otherwise the result of the specified
+                sensor.
+        """
+        if index >= 4:
+            raise IndexError("IR Sensor index should not exceed 2.")
+        sensor_1 = self.tof_1.value() == 0           ####################################################
+        sensor_2 = self.tof_2.value() == 0
+        sensor_3 = self.tof_3.value() == 0
+        if index == 1:
+            return sensor_1
+        elif index == 2:
+            return sensor_2
+        elif index == 3:
+            return sensor_3
+        elif index < 1:
+            return (sensor_1, sensor_2, sensor_3)
+
+
     def drive_forward(self, power = 255):
         """
         Turn both motors on to drive forward at full speed.
