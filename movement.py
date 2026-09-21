@@ -38,8 +38,8 @@ def turn_left(mm):
     # encoder count for a 90deg turn
     encoder_count_turn = turn_distance / wheel_circumference * ENCODER_COUNT_PER_WHEEL_REV
 
-    mm.motor_1.spin_backward(80)
-    mm.motor_2.spin_forward(80)
+    mm.motor_2.spin_backward(80)
+    mm.motor_1.spin_forward(80)
 
     while True:
         count_1 = abs(mm.motor_1.encoder_read() - start_1)
@@ -59,8 +59,8 @@ def turn_right(mm):
 
     encoder_count_turn = turn_distance / wheel_circumference * ENCODER_COUNT_PER_WHEEL_REV
 
-    mm.motor_2.spin_backward(80)
-    mm.motor_1.spin_forward(80)
+    mm.motor_1.spin_backward(80)
+    mm.motor_2.spin_forward(80)
 
     while True:
         count_1 = abs(mm.motor_1.encoder_read() - start_1)
