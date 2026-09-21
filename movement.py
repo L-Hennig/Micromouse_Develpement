@@ -3,8 +3,7 @@ import math
 # Test encoder count with mouse again(giving variable results)!
 ENCODER_COUNT_PER_WHEEL_REV = 718
 WHEEL_SPACING = 93
-ENCODER_COUNT_CELL = int(1.433 * ENCODER_COUNT_PER_WHEEL_REV)
-
+ENCODER_COUNT_CELL = int(1.433 * ENCODER_COUNT_PER_WHEEL_REV) 
 
 def move_forward_one_cell(mm):
     start_1 = mm.motor_1.encoder_read()
