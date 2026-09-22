@@ -11,9 +11,10 @@ class Memory:
     def __init__(self, width=9, height=9):
         self.width = width
         self.height = height
-        self.cells = bytearray(width*height)
-        self.flood = bytearray(width*height)
-        # potentially prefill boarder walls
+        self.reset()
+
+        
+        
 
     def _index(self, x, y):
         return y * self.width + x
@@ -44,3 +45,17 @@ class Memory:
             for x in range(self.width):
                 if not self.is_visited(x, y):
                     self.cells[self._index(x, y)] |= all_walls
+
+    def reset(self):
+        self.cells = bytearray(self.width*self.height)
+        self.flood = bytearray(self.width*self.height)
+        self._prefill_border()
+
+    def _prefill_border(self):
+        for x in range(self.width):
+            self.set_wall(x, 0, S)
+            self.set_wall(x, self.heigth - 1, N)
+        for y in range(self.height):
+            self.set_wall(0, y, E)
+            self.set_wall(0, self.width - 1, W)
+

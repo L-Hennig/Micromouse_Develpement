@@ -10,6 +10,7 @@ from machine import Pin, Timer
 from motor import Motor
 
 
+
 class Micromouse():
     """
     Represents the physical Micromouse device in code.
@@ -40,7 +41,8 @@ class Micromouse():
         self.exists = True
 
         # Inputs
-        self.button = Pin(11, Pin.IN)
+        self.button1 = Pin(11, Pin.IN) ## change to button1
+        self.button2 = Pin(100, Pin.IN) ############# change pin number
         self.ir_1 = Pin(12, Pin.IN)
         self.ir_2 = Pin(13, Pin.IN)
         self.ir_3 = Pin(14, Pin.IN)
@@ -52,6 +54,16 @@ class Micromouse():
         self.motor_2 = Motor(17, 18, 15, 16)
         self.motor_1 = Motor(21, 20, 19, 22)
         self.motor_2.invert_motor()
+
+        # Maze constants
+        self.start_cell = (0,0)
+        self.center_cells = [(4,4)]
+
+        # Live state
+        self.x, self.y = self.start_cell
+        self.heading = 0
+        self.speed = 100
+
 
         # Other
         self.blink_timer = Timer()
@@ -151,9 +163,9 @@ class Micromouse():
     def get_tof_values(self, index=0):
         """
         Gets the current values of the time of flight distnace sensors.
-        1 = front
-        2 = left
-        3 = right
+        1 = front (perpendicular)
+        2 = left (wonky)
+        3 = right (parallel + not wonky)
         
         Parameters:
             index (int): The number of the TOF sensor to read. 1 for TOF1
@@ -219,14 +231,22 @@ class Micromouse():
         encoder_1 = self.motor_1.encoder_read()
         return (encoder_2, encoder_1)
     
-    def get_button(self):
+    def get_button(self, index):
         """
-        Gets the value of the built-in button
-        
+        Gets the value of one of the two onboard buttons.
+
+        Parameters:
+            index (int): 1 for the reset button, 2 for the fast-run button.
+
         Returns:
-            (bool): True if button is pressed
+            (bool): True if the specified button is pressed.
         """
-        return self.button.value() < 1
+        if index == 1:
+            return self.button_1.value() < 1
+        elif index == 2:
+            return self.button_2.value() < 1
+        else:
+            raise ValueError("Button index must be 1 or 2.")
     
     def invert_motor_1(self):
         """
