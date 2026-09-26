@@ -54,8 +54,8 @@ class Memory:
     def _prefill_border(self):
         for x in range(self.width):
             self.set_wall(x, 0, S)
-            self.set_wall(x, self.heigth - 1, N)
+            self.set_wall(x, self.height - 1, N)
         for y in range(self.height):
-            self.set_wall(0, y, E)
-            self.set_wall(0, self.width - 1, W)
+            self.set_wall(0, y, W)
+            self.set_wall(self.width - 1, y, E)
 

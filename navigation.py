@@ -75,14 +75,14 @@ def explore_step(mm, memory, goal_cells):
 
 # fast run
 def fast_run(mm, memory):
-    goal_cells = (mm.center_x, mm.center_y)
+    goal_cells = mm.center_cells
 
     # block all walls in unvisited cells
     memory.block_unvisited()
     update_flood(memory, goal_cells)
 
     # calc path
-    path = get_full_path(memory, (mm.start_x, mm.start_y), goal_cells)
+    path = get_full_path(memory, mm.start_cells, goal_cells)
 
     # follow path
     for direction in path:
@@ -98,8 +98,8 @@ def _wait_for_release(mm, button_num):
 def _clasiffy_press(mm, button_num):
     """Blocks until a press is detected, then determines single vs double"""
     _wait_for_release(mm, button_num)
-    start = time.tick_ms()
-    while time.ticks_diff(time.tick_ms(), start) < DOUBLE_PRESS_WINDOW_MS:
+    start = time.ticks_ms()
+    while time.ticks_diff(time.ticks_ms(), start) < DOUBLE_PRESS_WINDOW_MS:
         if mm.get_button(button_num):
             _wait_for_release(mm, button_num)
             return "double"
@@ -134,7 +134,7 @@ def run_explore_leg(mm, memory, goal_cells):
 
 
 
-# Main Control Loop
+# Main control Loop
 def run(mm, memory):
     def full_reset():
         memory.reset()
@@ -168,6 +168,9 @@ def run(mm, memory):
             except RuntimeError:
                 mm.led_red_set(True)
                 continue
+            explore_count += 1
+            if explore_count >= 3:
+                mode = "fast"
 
         else: # fast
             mm.speed = FAST_SPEED_FIRST if fast_count == 0 else FAST_SPEED_DEFAULT

@@ -22,13 +22,13 @@ def update_flood(memory, goal_cells):
                 continue
             nx, ny = step(x, y, direction)
 
-            if not (0 <= nx <= memory.width and 0 <= y <= memory.height):
+            if not (0 <= nx < memory.width and 0 <= ny < memory.height):
                 continue
 
             if memory.get_flood(nx, ny) != 255:
                 continue
 
-            memory.set_flood(x, y, current_value + 1)
+            memory.set_flood(nx, ny, current_value + 1)
             queue.append((nx, ny))
 
 
@@ -42,7 +42,7 @@ def get_next_move(memory, x, y):
 
         nx, ny = step(x, y, direction)
 
-        if not (0 <= nx <= memory.width and 0 <= y <= memory.height):
+        if not (0 <= nx < memory.width and 0 <= ny < memory.height):
             continue
 
         value = memory.get_flood(nx, ny)
@@ -58,7 +58,7 @@ def is_solved(memory, x, y):
     return memory.get_flood(x, y) == 0
 
 def get_full_path(memory, start, goal_cells):
-    x, y = [start]
+    x, y = start
     path = []
 
     while (x,y) not in goal_cells:
