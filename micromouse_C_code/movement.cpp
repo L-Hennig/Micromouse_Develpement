@@ -1,0 +1,93 @@
+/*
+ * Filename: movement.cpp
+ * Description: C++ port of movement.py + movement_speedy.py for Arduino IDE.
+ *
+ * Turn/drive power now uses mm.speed instead of the original's hardcoded
+ * 80, so navigation.cpp's explore/fast-run speed changes actually take
+ * effect (previously mm.speed was set but never read anywhere).
+ */
+#include "movement.h"
+
+void move_forward_one_cell(Micromouse &mm) {
+  long start_1 = mm.motor_1.encoder_read();
+  long start_2 = mm.motor_2.encoder_read();
+
+  mm.motor_1.spin_forward(mm.speed);
+  mm.motor_2.spin_forward(mm.speed);
+
+  // Busy-polling the encoder here is fine (and fast) now that reads are
+  // backed by real hardware interrupts, unlike the original MicroPython
+  // soft-IRQ version this was ported from.
+  while (true) {
+    long count_1 = abs(mm.motor_1.encoder_read() - start_1);
+    long count_2 = abs(mm.motor_2.encoder_read() - start_2);
+    if (count_1 >= ENCODER_COUNT_CELL || count_2 >= ENCODER_COUNT_CELL) break;
+  }
+
+  mm.motor_1.spin_stop();
+  mm.motor_2.spin_stop();
+}
+
+void move_x_cells(Micromouse &mm, int cells) {
+  for (int i = 0; i < cells; i++) {
+    move_forward_one_cell(mm);
+  }
+}
+
+void turn_left(Micromouse &mm, float angle_deg) {
+  long start_1 = mm.motor_1.encoder_read();
+  long start_2 = mm.motor_2.encoder_read();
+
+  // Sector of the circle traced by the wheel spacing, for the given angle.
+  float turn_distance = PI * WHEEL_SPACING_MM * angle_deg / 360.0f;
+  float wheel_circumference = PI * WHEEL_DIAMETER_MM;
+  long encoder_count_turn =
+      (long)(turn_distance / wheel_circumference * ENCODER_COUNT_PER_WHEEL_REV);
+
+  mm.motor_2.spin_backward(mm.speed);
+  mm.motor_1.spin_forward(mm.speed);
+
+  while (true) {
+    long count_1 = abs(mm.motor_1.encoder_read() - start_1);
+    long count_2 = abs(mm.motor_2.encoder_read() - start_2);
+    if (count_1 >= encoder_count_turn && count_2 >= encoder_count_turn) break;
+  }
+
+  mm.drive_stop();
+}
+
+void turn_right(Micromouse &mm, float angle_deg) {
+  long start_1 = mm.motor_1.encoder_read();
+  long start_2 = mm.motor_2.encoder_read();
+
+  float turn_distance = PI * WHEEL_SPACING_MM * angle_deg / 360.0f;
+  float wheel_circumference = PI * WHEEL_DIAMETER_MM;
+  long encoder_count_turn =
+      (long)(turn_distance / wheel_circumference * ENCODER_COUNT_PER_WHEEL_REV);
+
+  mm.motor_1.spin_backward(mm.speed);
+  mm.motor_2.spin_forward(mm.speed);
+
+  while (true) {
+    long count_1 = abs(mm.motor_1.encoder_read() - start_1);
+    long count_2 = abs(mm.motor_2.encoder_read() - start_2);
+    if (count_1 >= encoder_count_turn && count_2 >= encoder_count_turn) break;
+  }
+
+  mm.drive_stop();
+}
+
+void turn_left(Micromouse &mm) {
+  turn_left(mm, 90.0f);
+}
+
+void turn_right(Micromouse &mm) {
+  turn_right(mm, 90.0f);
+}
+
+void turn_180(Micromouse &mm) {
+  // The original called turn_left(mm) twice; a single 180-degree turn is
+  // mathematically identical since the encoder target scales linearly
+  // with angle, so this does the same thing in one pass.
+  turn_left(mm, 180.0f);
+}
