@@ -33,7 +33,7 @@ void move_forward_one_cell(Micromouse &mm) {
   bool right_wall_present = right_mm > 0 && right_mm < WALL_MAX_MM;
 
   //how far off from middle
-  float centre_error_mm = 0
+  float centre_error_mm = 0;
   if (left_wall_present && right_wall_present) centre_error_mm = (left_mm - right_mm) / 2.0f;
   else if (left_wall_present)                  centre_error_mm = left_mm - TARGET_SIDE_MM;
   else if (right_wall_present)                 centre_error_mm = TARGET_SIDE_MM - right_mm;
