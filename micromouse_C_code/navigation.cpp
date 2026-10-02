@@ -66,15 +66,21 @@ void move_to_next_cell(Micromouse &mm, Direction next_dir) {
   mm.y = moved_to.y;
 }
 
-void explore_step(Micromouse &mm, Memory &memory, const Cell *goal_cells, uint8_t goal_count) {
+void explore_step(Micromouse &mm, Memory &memory,
+                  const Cell *goal_cells, uint8_t goal_count) {
+
   if (!memory.is_visited(mm.x, mm.y)) {
     read_walls(mm, memory);
+    memory.mark_visited(mm.x, mm.y);
   }
   update_flood(memory, goal_cells, goal_count);
   Direction next_dir = get_next_move(memory, mm.x, mm.y);
+  if (next_dir == DIR_NONE) {
+    return;
+  }
   move_to_next_cell(mm, next_dir);
-  memory.mark_visited(mm.x, mm.y);
 }
+
 
 bool fast_run(Micromouse &mm, Memory &memory) {
   const Cell *goal_cells = mm.center_cells;
