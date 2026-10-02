@@ -25,10 +25,32 @@ void move_forward_one_cell(Micromouse &mm) {
     long count_2 = abs(mm.motor_2.encoder_read() - start_2);
     if (count_1 >= ENCODER_COUNT_CELL_1 || count_2 >= ENCODER_COUNT_CELL_2) break;
     if (millis() - start_time > MOVE_TIMEOUT_MILLISEC) break; //safety timeout if encoder count isnt reached after 7s due to error
-  }
+  
 
-  mm.motor_1.spin_stop();
-  mm.motor_2.spin_stop();
+  float left_mm = mm.get_tof_distance(2);
+  float right_mm = mm.get_tof_distance(3);
+  bool left_wall_present = left_mm > 0 && left_mm < WALL_MAX_MM;
+  bool right_wall_present = right_mm > 0 && right_mm < WALL_MAX_MM;
+
+  //how far off from middle
+  float centre_error_mm = 0
+  if (left_wall_present && right_wall_present) centre_error_mm = (left_mm - right_mm) / 2.0f;
+  else if (left_wall_present)                  centre_error_mm = left_mm - TARGET_SIDE_MM;
+  else if (right_wall_present)                 centre_error_mm = TARGET_SIDE_MM - right_mm;
+
+  //turn error into a speed change
+  int speed_change = constrain((int)(STEERING_STRENGTH * centre_error_mm), -MAX_SPEED_CHANGE, MAX_SPEED_CHANGE);
+  
+  int left_power  = constrain(mm.speed - speed_change, 0, 255);
+  int right_power = constrain(mm.speed + speed_change, 0, 255);
+
+  mm.motor_2.spin_forward(left_power);    // left wheel
+  mm.motor_1.spin_forward(right_power);   // right wheel
+    
+
+  }
+  
+  mm.drive_stop();
 }
 
 void move_x_cells(Micromouse &mm, int cells) {
