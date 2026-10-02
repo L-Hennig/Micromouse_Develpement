@@ -13,6 +13,7 @@
 #include "micromouse.h"
 
 // Wheel/encoder geometry constants (from movement.py / movement_speedy.py)
+//To do: turn each encoder and find the counts for first 2 constants.
 const int   ENCODER_COUNT_PER_WHEEL_REV_1 = 1056;   // motor_1
 const int   ENCODER_COUNT_PER_WHEEL_REV_2 = 1056;   // motor_2
 const float WHEEL_DIAMETER_MM = 44.0f;
