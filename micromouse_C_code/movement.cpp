@@ -8,9 +8,13 @@
  */
 #include "movement.h"
 
+const unsigned long MOVE_TIMEOUT_MILLISEC = 7000;   // give up on a move after 7 seconds
+
 void move_forward_one_cell(Micromouse &mm) {
   long start_1 = mm.motor_1.encoder_read();
   long start_2 = mm.motor_2.encoder_read();
+
+  unsigned long start_time = millis(); //starts a timer 
 
   mm.motor_1.spin_forward(mm.speed);
   mm.motor_2.spin_forward(mm.speed);
@@ -22,6 +26,7 @@ void move_forward_one_cell(Micromouse &mm) {
     long count_1 = abs(mm.motor_1.encoder_read() - start_1);
     long count_2 = abs(mm.motor_2.encoder_read() - start_2);
     if (count_1 >= ENCODER_COUNT_CELL_1 || count_2 >= ENCODER_COUNT_CELL_2) break;
+    if (millis() - start_time > MOVE_TIMEOUT_MILLISEC) break; //safety timeout if encoder count isnt reached after 7s due to error
   }
 
   mm.motor_1.spin_stop();
