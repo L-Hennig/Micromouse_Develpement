@@ -8,8 +8,6 @@
  */
 #include "movement.h"
 
-const unsigned long MOVE_TIMEOUT_MILLISEC = 7000;   // stop moving forward if encoder count hasnt been reached after 7s.
-
 void move_forward_one_cell(Micromouse &mm) {
   long start_1 = mm.motor_1.encoder_read();
   long start_2 = mm.motor_2.encoder_read();
