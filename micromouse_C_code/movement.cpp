@@ -21,7 +21,7 @@ void move_forward_one_cell(Micromouse &mm) {
   while (true) {
     long count_1 = abs(mm.motor_1.encoder_read() - start_1);
     long count_2 = abs(mm.motor_2.encoder_read() - start_2);
-    if (count_1 >= ENCODER_COUNT_CELL || count_2 >= ENCODER_COUNT_CELL) break;
+    if (count_1 >= ENCODER_COUNT_CELL_1 || count_2 >= ENCODER_COUNT_CELL_2) break;
   }
 
   mm.motor_1.spin_stop();
@@ -41,8 +41,8 @@ void turn_left(Micromouse &mm, float angle_deg) {
   // Sector of the circle traced by the wheel spacing, for the given angle.
   float turn_distance = PI * WHEEL_SPACING_MM * angle_deg / 360.0f;
   float wheel_circumference = PI * WHEEL_DIAMETER_MM;
-  long encoder_count_turn =
-      (long)(turn_distance / wheel_circumference * ENCODER_COUNT_PER_WHEEL_REV);
+  long turn_1 = (long)(turn_distance / wheel_circumference * ENCODER_COUNT_PER_WHEEL_REV_1);
+  long turn_2 = (long)(turn_distance / wheel_circumference * ENCODER_COUNT_PER_WHEEL_REV_2);
 
   mm.motor_2.spin_backward(mm.speed);
   mm.motor_1.spin_forward(mm.speed);
@@ -50,7 +50,7 @@ void turn_left(Micromouse &mm, float angle_deg) {
   while (true) {
     long count_1 = abs(mm.motor_1.encoder_read() - start_1);
     long count_2 = abs(mm.motor_2.encoder_read() - start_2);
-    if (count_1 >= encoder_count_turn && count_2 >= encoder_count_turn) break;
+    if (count_1 >= turn_1 && count_2 >= turn_2) break;
   }
 
   mm.drive_stop();
@@ -62,8 +62,8 @@ void turn_right(Micromouse &mm, float angle_deg) {
 
   float turn_distance = PI * WHEEL_SPACING_MM * angle_deg / 360.0f;
   float wheel_circumference = PI * WHEEL_DIAMETER_MM;
-  long encoder_count_turn =
-      (long)(turn_distance / wheel_circumference * ENCODER_COUNT_PER_WHEEL_REV);
+  long turn_1 = (long)(turn_distance / wheel_circumference * ENCODER_COUNT_PER_WHEEL_REV_1);
+  long turn_2 = (long)(turn_distance / wheel_circumference * ENCODER_COUNT_PER_WHEEL_REV_2);
 
   mm.motor_1.spin_backward(mm.speed);
   mm.motor_2.spin_forward(mm.speed);
@@ -71,7 +71,7 @@ void turn_right(Micromouse &mm, float angle_deg) {
   while (true) {
     long count_1 = abs(mm.motor_1.encoder_read() - start_1);
     long count_2 = abs(mm.motor_2.encoder_read() - start_2);
-    if (count_1 >= encoder_count_turn && count_2 >= encoder_count_turn) break;
+    if (count_1 >= turn_1 && count_2 >= turn_2) break;
   }
 
   mm.drive_stop();
