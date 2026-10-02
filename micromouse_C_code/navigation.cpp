@@ -132,7 +132,7 @@ static void full_reset(Micromouse &mm, Memory &memory,
   mm.x = mm.start_cell.x;
   mm.y = mm.start_cell.y;
   mm.heading = NORTH;
-  memory.mark_visited(mm.x, mm.y);
+  // removed line because otherwise walls not read in starting cell: memory.mark_visited(mm.x, mm.y);
   explore_count = 0;
   fast_count = 0;
   mode_is_fast = false;
