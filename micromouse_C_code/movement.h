@@ -18,7 +18,7 @@ const int   ENCODER_COUNT_PER_WHEEL_REV_1 = 1056;   // motor_1
 const int   ENCODER_COUNT_PER_WHEEL_REV_2 = 1056;   // motor_2
 const float WHEEL_DIAMETER_MM = 44.0f;
 const float WHEEL_SPACING_MM  = 93.0f;
-const float CELL_SIZE_MM      = 168.0f;
+const float CELL_SIZE_MM      = 180.0f;
 
 // Encoder counts for one cell for each wheel
 const long ENCODER_COUNT_CELL_1 =
