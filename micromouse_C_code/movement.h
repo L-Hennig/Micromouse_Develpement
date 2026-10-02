@@ -32,9 +32,9 @@ const unsigned long MOVE_TIMEOUT_MILLISEC = 7000;   // stop moving forward if en
 const float STEERING_STRENGTH = 1.0f;     // bigger = steers back to the middle harder
 const float WALL_MAX_MM       = 120.0f;   // a side reading below this counts as a wall
 const float WALL_GAP_MM       = 168.0f;   // clear space between the walls
-const float MOUSE_WIDTH_MM    = 70.0f;    // MEASURE: width of the mouse at the side sensors
+const float MOUSE_WIDTH_MM    = 70.0f;    // MEASURE!!!!!!!!! TBD
 const float TARGET_SIDE_MM    = (WALL_GAP_MM - MOUSE_WIDTH_MM) / 2.0f;   // ideal distance to a side wall
-
+const int MAX_SPEED_CHANGE = 15;
 
 
 void move_forward_one_cell(Micromouse &mm);
