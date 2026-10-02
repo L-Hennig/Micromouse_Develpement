@@ -13,12 +13,18 @@
 #include "micromouse.h"
 
 // Wheel/encoder geometry constants (from movement.py / movement_speedy.py)
-const int   ENCODER_COUNT_PER_WHEEL_REV = 1056;
+const int   ENCODER_COUNT_PER_WHEEL_REV_1 = 1056;   // motor_1
+const int   ENCODER_COUNT_PER_WHEEL_REV_2 = 1056;   // motor_2
 const float WHEEL_DIAMETER_MM = 44.0f;
-const float WHEEL_SPACING_MM  = 93.0f;   // check this, see below
+const float WHEEL_SPACING_MM  = 93.0f;
 const float CELL_SIZE_MM      = 168.0f;
-const long  ENCODER_COUNT_CELL =
-    (long)(CELL_SIZE_MM / (PI * WHEEL_DIAMETER_MM) * ENCODER_COUNT_PER_WHEEL_REV);
+
+// Encoder counts for one cell for each wheel
+const long ENCODER_COUNT_CELL_1 =
+    (long)(CELL_SIZE_MM / (PI * WHEEL_DIAMETER_MM) * ENCODER_COUNT_PER_WHEEL_REV_1);
+const long ENCODER_COUNT_CELL_2 =
+    (long)(CELL_SIZE_MM / (PI * WHEEL_DIAMETER_MM) * ENCODER_COUNT_PER_WHEEL_REV_2);
+
 
 void move_forward_one_cell(Micromouse &mm);
 void move_x_cells(Micromouse &mm, int cells);
